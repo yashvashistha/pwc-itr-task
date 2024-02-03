@@ -15,7 +15,6 @@ function EditPage() {
     try {
       jsoncontent = JSON.parse(jsoncontent);
       const d = { uniqueid: id, data: jsoncontent.data };
-      console.log(d);
       var config = {
         method: "post",
         maxBodyLength: Infinity,
