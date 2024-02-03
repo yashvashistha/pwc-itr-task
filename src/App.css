@@ -384,11 +384,11 @@ table tr td:nth-child(6) div button {
   overflow-x: scroll;
   width: 100%;
 }
-.react-pdf__Page {
-  /* width: 90%;
+/* .react-pdf__Page {
+  width: 90%;
   overflow-x: scroll;
-  min-width: 90% !important; */
-}
+  min-width: 90% !important;
+} */
 canvas.react-pdf__Page__canvas {
   display: block;
   user-select: none;

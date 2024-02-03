@@ -1,3 +1,4 @@
+import { click } from "@testing-library/user-event/dist/click";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -5,142 +6,47 @@ import { useParams } from "react-router-dom";
 
 function EditPage() {
   const { id } = useParams();
-  const fileinputref = useRef(null);
-  const [file, setFile] = useState(null);
-  const [tempfile, setTempFile] = useState(null);
-  const [block, setBlock] = useState(false);
-  const [pblock, setPBlock] = useState(false);
-  const pref = useRef(null);
-  const uploadicon = "Icons/uploadicon.png";
-
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-  };
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-  const handleDrop = (e) => {
-    e.preventDefault();
-    uploadhandler(e.dataTransfer.files[0]);
-  };
-  const openinputhandler = () => {
-    fileinputref.current.click();
-  };
-  const uploadhandler = (file) => {
-    setTempFile(file);
-    setPBlock("none");
-    pref.current.innerText = file.name;
-  };
-  const hiddenuploadhandler = async (e) => {
-    uploadhandler(e.target.files[0]);
-  };
-  const uploadbtnhandle = () => {
-    if (tempfile === null) {
-      alert("Upload a File");
-      return;
+  const [clicked, setClicked] = useState(false);
+  const reuploadapi =
+    "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/reupload_json";
+  const uploadjsonhandle = async (jsoncontent) => {
+    setClicked(!clicked);
+    // jsoncontent = JSON.parse(jsoncontent);
+    try {
+      jsoncontent = JSON.parse(jsoncontent);
+      const d = { uniqueid: id, data: jsoncontent };
+      var config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: reuploadapi,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify(d),
+      };
+      axios
+        .request(config)
+        .then((response) => {
+          console.log(response);
+          alert("success");
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("error");
+        });
+    } catch (error) {
+      alert("Wrong JSON Format");
     }
-    if (tempfile.type !== "application/pdf") {
-      alert("Only PDF Files are allowed");
-      return;
-    }
-    pref.current.innerText = "";
-    setBlock(!block);
-    setFile(tempfile);
-    setPBlock(!pblock);
   };
   return (
     <div className="Chatpage">
-      <div className="Section1">
-        <button
-          onClick={() => {
-            setBlock(!block);
-          }}
-        >
-          Add New File
-        </button>
-        {/* Hidden file input from here */}
-        <div
-          className="popup-container"
-          style={{
-            display: block ? "flex" : "none",
-            flexDirection: "column",
-            zIndex: "2",
-          }}
-        >
-          <div
-            style={{
-              height: "max(40px, 20%)",
-              width: "100%",
-              backgroundColor: "rgba(217, 57, 84, 1)",
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "center",
-            }}
-          >
-            <p
-              style={{
-                color: "white",
-                fontSize: "16px",
-                fontWeight: "700",
-                fontFamily: "Helvetica",
-                paddingLeft: "5px",
-              }}
-            >
-              Chat PDF
-            </p>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            <div
-              className="DragDrop"
-              onDragEnter={handleDragEnter}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
-              style={{ width: "60%" }}
-            >
-              <p ref={pref}></p>
-              <p style={{ width: "100%", display: pblock }}>
-                <img
-                  src={uploadicon}
-                  style={{ position: "relative", top: "4px" }}
-                />{" "}
-                Drag & Drop files in this or{" "}
-                <span
-                  onClick={openinputhandler}
-                  style={{
-                    color: "rgba(217, 57, 84, 1)",
-                    cursor: "pointer",
-                  }}
-                >
-                  Browse File
-                </span>
-              </p>
-            </div>
-            <div className="Upload-btn" onClick={uploadbtnhandle}>
-              <p style={{ margin: "0px" }}>Upload</p>
-            </div>
-          </div>
-        </div>
-        <input
-          type="file"
-          ref={fileinputref}
-          style={{ display: "none" }}
-          onChange={hiddenuploadhandler}
-        />
-        {/* Hidden file input to here  */}
-      </div>
-      <Section2 pdf={file} id={id} />
+      <Section2 id={id} clicked={clicked} uploadjsonhandle={uploadjsonhandle} />
       <button
         className="Upload-btn"
         style={{ borderStyle: "none", marginTop: "1%" }}
+        onClick={() => {
+          setClicked(!clicked);
+        }}
       >
         Save JSON
       </button>
@@ -148,11 +54,12 @@ function EditPage() {
   );
 }
 
-function Section2({ pdf, id }) {
+function Section2({ id, clicked, uploadjsonhandle }) {
   const [pdfFile, setPdfFile] = useState(null);
   const [jsonFile, setJsonFile] = useState(null);
-  const [filename, setFileName] = useState(null);
+  const [newjsonFile, setNewJsonFile] = useState(null);
   const [numPages, setNumPages] = useState();
+  const preref = useRef(null);
   const containerRef = useRef(null);
   const filedownloadapi =
     "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/download_data?";
@@ -189,33 +96,41 @@ function Section2({ pdf, id }) {
         const pdfurl = URL.createObjectURL(blob);
         setPdfFile(pdfurl);
       } else if (data.type === "json") {
-        resultfile = JSON.stringify(response, null, 2);
+        resultfile = JSON.stringify(response.data, null, 2);
         setJsonFile(resultfile);
+        console.log(response.data.data);
       }
     } catch (error) {
       console.error("Error downloading file:", error);
     }
   };
 
-  const jsonchangehandle = (e) => {
-    // console.log(e.target.innerText);
-    console.log("Change");
-  };
+  // const jsonchangehandle = (e) => {
+  //   // console.log(e.target.innerText);
+  //   console.log("Change");
+  // };
 
   useEffect(() => {
-    if (id) {
+    if (id && !clicked) {
       downloadhandler({ id: id, type: "pdf" });
       downloadhandler({ id: id, type: "json" });
     }
-  }, [id]);
+    if (clicked) {
+      uploadjsonhandle(preref.current.innerText);
+      // console.log(preref.current.innerText);
+    }
+  }, [id, clicked]);
+
+  const [pdfwidth, setPdfWidth] = useState(620);
   return (
     <div
       style={{
         width: "min(1290px, 90%)",
-        height: "min(737px, 75%)",
+        height: "min(737px, 85%)",
         border: "1px solid lightgrey",
         display: "flex",
         flexDirection: "row",
+        marginTop: "2%",
       }}
     >
       <div
@@ -226,22 +141,52 @@ function Section2({ pdf, id }) {
           justifyContent: "center",
           alignItems: "center",
           flexDirection: "column",
-          // overflow: "scroll",
         }}
       >
-        <p
+        <div
           style={{
-            fontFamily: "arial",
-            fontWeight: "500",
-            height: "20px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "90%",
           }}
         >
-          {filename ? (
-            <p>File Name: {filename.slice(0, -4)}</p>
-          ) : (
-            <p>No File Uploaded</p>
-          )}
-        </p>
+          <p
+            style={{
+              alignSelf: "flex-start",
+              fontFamily: "arial",
+              fontWeight: "600",
+              height: "20px",
+            }}
+          >
+            PDF File
+          </p>
+          <div
+            style={{
+              width: "10%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <button
+              style={{ width: "20px" }}
+              onClick={() => {
+                setPdfWidth(pdfwidth + 20);
+              }}
+            >
+              +{/* <img src="Icons/zoominicon.png" /> */}
+            </button>
+            <button
+              style={{ width: "20px" }}
+              onClick={() => {
+                setPdfWidth(pdfwidth - 20);
+              }}
+            >
+              -{/* <img src="Icons/zoomouticon.png" /> */}
+            </button>
+          </div>
+        </div>
         <div
           ref={containerRef}
           style={{
@@ -254,7 +199,7 @@ function Section2({ pdf, id }) {
           {pdfFile && (
             <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
               {Array.from({ length: numPages }, (_, index) => (
-                <Page key={index + 1} pageNumber={index + 1} />
+                <Page key={index + 1} pageNumber={index + 1} width={pdfwidth} />
               ))}
             </Document>
           )}
@@ -265,25 +210,33 @@ function Section2({ pdf, id }) {
           flex: 1,
           border: "1px solid lightgrey",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          justifyContent: "center",
           alignItems: "center",
+          flexDirection: "column",
         }}
       >
-        <p style={{ alignSelf: "flex-start" }}>JSON</p>
+        <p
+          style={{
+            alignSelf: "flex-start",
+            fontFamily: "arial",
+            fontWeight: "600",
+            height: "20px",
+          }}
+        >
+          JSON
+        </p>
         <div
           contentEditable={true}
-          onInput={jsonchangehandle}
-          onBlur={jsonchangehandle}
+          // onInput={jsonchangehandle}
+          // onBlur={jsonchangehandle}
           style={{
-            height: "100%",
+            height: "95%",
             width: "100%",
-            // overflowX: "scroll",
             overflowY: "scroll",
           }}
         >
           {jsonFile && (
-            <pre style={{ maxWidth: "100%", overflowX: "scroll" }}>
+            <pre style={{ maxWidth: "100%", overflowX: "scroll" }} ref={preref}>
               {jsonFile}
             </pre>
           )}
