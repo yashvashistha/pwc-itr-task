@@ -1,7 +1,10 @@
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
+import { useParams } from "react-router-dom";
 
-function ChatPage() {
+function EditPage() {
+  const { id } = useParams();
   const fileinputref = useRef(null);
   const [file, setFile] = useState(null);
   const [tempfile, setTempFile] = useState(null);
@@ -134,15 +137,25 @@ function ChatPage() {
         />
         {/* Hidden file input to here  */}
       </div>
-      <Section2 pdf={file} />
+      <Section2 pdf={file} id={id} />
+      <button
+        className="Upload-btn"
+        style={{ borderStyle: "none", marginTop: "1%" }}
+      >
+        Save JSON
+      </button>
     </div>
   );
 }
 
-function Section2({ pdf }) {
+function Section2({ pdf, id }) {
   const [pdfFile, setPdfFile] = useState(null);
+  const [jsonFile, setJsonFile] = useState(null);
   const [filename, setFileName] = useState(null);
   const [numPages, setNumPages] = useState();
+  const containerRef = useRef(null);
+  const filedownloadapi =
+    "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/download_data?";
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
@@ -150,19 +163,56 @@ function Section2({ pdf }) {
     setNumPages(numPages);
   };
 
-  useEffect(() => {
-    if (pdf) {
-      setPdfFile(pdf);
-      setFileName(pdf.name);
+  const downloadhandler = async (data) => {
+    const downloadlink =
+      filedownloadapi + "uniqueid=" + data.id + "&type=" + data.type;
+    try {
+      const response = await axios.get(downloadlink, {
+        headers: {
+          "x-api-key": "doVk3aPq1i8Y5UPpnw3OO4a610LK2yFrahOpYEo0",
+          "Content-Type": "application/" + data.type,
+        },
+      });
+
+      let resultfile;
+      if (data.type === "pdf") {
+        const decodestring = atob(response.data.body);
+        const utf8decoder = new TextDecoder("utf-8");
+        resultfile = utf8decoder.decode(
+          new Uint8Array(
+            decodestring.split("").map((char) => char.charCodeAt(0))
+          )
+        );
+        const blob = new Blob([resultfile], {
+          type: "application/" + data.type,
+        });
+        const pdfurl = URL.createObjectURL(blob);
+        setPdfFile(pdfurl);
+      } else if (data.type === "json") {
+        resultfile = JSON.stringify(response, null, 2);
+        setJsonFile(resultfile);
+      }
+    } catch (error) {
+      console.error("Error downloading file:", error);
     }
-    // console.log(reload);
-    console.log(pdf);
-  }, [pdf]);
+  };
+
+  const jsonchangehandle = (e) => {
+    // console.log(e.target.innerText);
+    console.log("Change");
+  };
+
+  useEffect(() => {
+    if (id) {
+      downloadhandler({ id: id, type: "pdf" });
+      downloadhandler({ id: id, type: "json" });
+    }
+  }, [id]);
   return (
     <div
       style={{
         width: "min(1290px, 90%)",
-        height: "min(737px, 80%)",
+        height: "min(737px, 75%)",
         border: "1px solid lightgrey",
         display: "flex",
         flexDirection: "row",
@@ -193,8 +243,9 @@ function Section2({ pdf }) {
           )}
         </p>
         <div
+          ref={containerRef}
           style={{
-            overflowY: "auto",
+            overflowY: "scroll",
             overflowX: "auto",
             height: "95%",
             width: "100%",
@@ -219,40 +270,26 @@ function Section2({ pdf }) {
           alignItems: "center",
         }}
       >
-        <p style={{ alignSelf: "flex-start" }}>Chat</p>
+        <p style={{ alignSelf: "flex-start" }}>JSON</p>
         <div
+          contentEditable={true}
+          onInput={jsonchangehandle}
+          onBlur={jsonchangehandle}
           style={{
-            width: "80%",
-            display: "flex",
-            position: "relative",
-            bottom: "10px",
-            height: "25px",
+            height: "100%",
+            width: "100%",
+            // overflowX: "scroll",
+            overflowY: "scroll",
           }}
         >
-          <input
-            style={{
-              width: "90%",
-              height: "25px",
-              boxSizing: "border-box",
-              border: "1px solid rgba(217, 57, 84, 1)",
-            }}
-            placeholder="Ask any question..."
-          />
-          <button
-            style={{
-              width: "50px",
-              borderRadius: "0px 15px 15px 0px",
-              borderStyle: "none",
-              background: "rgba(217, 57, 84, 1)",
-              color: "white",
-            }}
-          >
-            Send
-          </button>
+          {jsonFile && (
+            <pre style={{ maxWidth: "100%", overflowX: "scroll" }}>
+              {jsonFile}
+            </pre>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-export default ChatPage;
+export default EditPage;
