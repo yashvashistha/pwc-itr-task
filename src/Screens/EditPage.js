@@ -1,4 +1,3 @@
-import { click } from "@testing-library/user-event/dist/click";
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
@@ -66,7 +65,7 @@ function Section2({ id, clicked, uploadjsonhandle }) {
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    console.log(numPages);
+    // console.log(numPages);
     setNumPages(numPages);
   };
 
@@ -105,10 +104,23 @@ function Section2({ id, clicked, uploadjsonhandle }) {
     }
   };
 
-  // const jsonchangehandle = (e) => {
-  //   // console.log(e.target.innerText);
-  //   console.log("Change");
-  // };
+  const jsonchangehandle = () => {
+    const jsoncontent = preref.current.innerHTML;
+    try {
+      JSON.parse(jsoncontent);
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      const lines = jsoncontent.split("\n");
+      const mat = e.message.match(/\(line (\d+) column (\d+)\)/);
+      alert(
+        `Wrong format in ${lines[parseInt(mat[1] - 2)]} at line ${parseInt(
+          mat[1] - 2
+        )}`
+      );
+      return false;
+    }
+  };
 
   useEffect(() => {
     if (id && !clicked) {
@@ -116,7 +128,9 @@ function Section2({ id, clicked, uploadjsonhandle }) {
       downloadhandler({ id: id, type: "json" });
     }
     if (clicked) {
-      uploadjsonhandle(preref.current.innerText);
+      if (jsonchangehandle()) {
+        uploadjsonhandle(preref.current.innerText);
+      }
       // console.log(preref.current.innerText);
     }
   }, [id, clicked]);
@@ -245,4 +259,41 @@ function Section2({ id, clicked, uploadjsonhandle }) {
     </div>
   );
 }
+
+// const JsonViewer = ({ data }) => {
+//   const [expanded, setExpanded] = useState(false);
+//   const divref = useRef(null);
+
+//   const toggleExpand = () => {
+//     setExpanded(!expanded);
+//   };
+
+//   const renderValue = (value) => {
+//     if (typeof value === "object") {
+//       return <JsonViewer data={value} />;
+//     }
+//     return value;
+//   };
+
+//   const renderObject = (obj) => {
+//     return (
+//       <ul>
+//         {Object.entries(obj).map(([key, value]) => (
+//           <li key={key}>
+//             <strong>{key}:</strong> {renderValue(value)}
+//           </li>
+//         ))}
+//       </ul>
+//     );
+//   };
+
+//   return (
+//     <div ref={divref}>
+//       <button onClick={toggleExpand} style={{ width: "15px", height: "20px" }}>
+//         {expanded ? "  -  " : "  +  "}
+//       </button>
+//       {expanded && typeof data === "object" && renderObject(data)}
+//     </div>
+//   );
+// };
 export default EditPage;
