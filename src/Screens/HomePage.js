@@ -19,9 +19,10 @@ function Upload({ setReload, reload }) {
   const posturl =
     "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/upload_pdf";
   const [file, setFile] = useState(null);
-  const [selectedoption, setSelectedOption] = useState("");
+  const [selectedoption, setSelectedOption] = useState("BOE");
   const [block, setBlock] = useState("block");
   const pref = useRef(null);
+  // const [selectedoption, setSelectedOption] = useState(null);
   const uploadicon = "Icons/uploadicon.png";
 
   const handleDragEnter = (e) => {
@@ -47,13 +48,13 @@ function Upload({ setReload, reload }) {
     pref.current.innerText = file.name;
     setBlock("none");
     setFile(file);
-    setSelectedOption(filetypehanlder(file.name)[1]);
+    // setSelectedOption(filetypehanlder(file.name)[1]);
   };
 
-  const filetypehanlder = (name) => {
-    const regex = /@([^@]+)@/;
-    return name.match(regex);
-  };
+  // const filetypehanlder = (name) => {
+  //   const regex = /@([^@]+)@/;
+  //   return name.match(regex);
+  // };
 
   const uploadbtnhandle = async () => {
     if (file === null) {
@@ -91,7 +92,7 @@ function Upload({ setReload, reload }) {
   return (
     <div className="Upload-Maindiv">
       <p>Upload File</p>
-      <div className="Upload-Subdiv">
+      <div className="Upload-Subdiv" style={{ width: "100%" }}>
         <div
           className="DragDrop"
           onDragEnter={handleDragEnter}
@@ -124,25 +125,55 @@ function Upload({ setReload, reload }) {
           onChange={hiddenuploadhandler}
         />
         {/* Hidden file input to here  */}
+        <select
+          style={{ width: "15%", height: "30%", border: "1px solid black" }}
+          value={selectedoption}
+          onChange={(e) => {
+            setSelectedOption(e.target.value);
+          }}
+        >
+          <option value="BOE">Bill Of Entry</option>
+          <option value="SB">Shipping Bill</option>
+          <option value="CHKBOE">Checklist Bill Of Entry</option>
+          <option value="ADV">Advance License</option>
+          <option value="ADVNEW">Advance License New</option>
+          <option value="AC">Authorized Cetificate</option>
+          <option value="EPCG">EPCG License</option>
+          <option value="EPCGNEW">EPCG License</option>
+          <option value="BRC">Bank Realisation Certificate</option>
+          <option value="IT">Income Tax</option>
+          <option value="GSTR1">GSTR1</option>
+          <option value="GSTR1NEW">GSTR1 New</option>
+          <option value="GSTR3B">GSTR3B</option>
+          <option value="GSTR9">GSTR9</option>
+          <option value="GSTR9C">GSTR9c</option>
+          <option value="NOTICE">Notice</option>
+          <option value="SI">Sales Invoice</option>
+          <option value="CI">Commercial Invoice</option>
+          <option value="DD">Delivery Detail</option>
+          <option value="PI">Purchase Invoice</option>
+        </select>
         <div className="Upload-btn" onClick={uploadbtnhandle}>
           <p style={{ margin: "0px" }}>Upload</p>
         </div>
-        {/* <div
-            className="Upload-btn"
+        <div
+          style={{
+            width: "15%",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <img
+            src="Icons/refreshicon.png"
+            alt="Refresh"
+            style={{
+              cursor: "pointer",
+            }}
             onClick={() => {
               setReload(!reload);
             }}
-          >
-            Refresh
-          </div> */}
-        <img
-          src="Icons/refreshicon.png"
-          alt="Refresh"
-          style={{ cursor: "pointer", position: "absolute", right: "50px" }}
-          onClick={() => {
-            setReload(!reload);
-          }}
-        />
+          />
+        </div>
       </div>
     </div>
   );
