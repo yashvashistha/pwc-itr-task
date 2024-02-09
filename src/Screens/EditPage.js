@@ -89,7 +89,7 @@ function EditPage() {
             nav("/");
           }}
         >
-          Cancel JSON
+          Cancel
         </button>
       </div>
     </div>
