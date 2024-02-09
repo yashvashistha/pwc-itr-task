@@ -28,7 +28,8 @@ function EditPage() {
     axios
       .request(config)
       .then((response) => {
-        nav("/");
+        // nav("/");
+        setDis("view");
       })
       .catch((error) => {
         console.log(error);
@@ -210,6 +211,7 @@ function Section2({ id, clicked, uploadjsonhandle, dis }) {
         setPdfFile(pdfurl);
       } else if (data.type === "json") {
         setJsonFile(response);
+        setNewJsonFile(response);
       }
     } catch (error) {
       console.error("Error downloading file:", error);
