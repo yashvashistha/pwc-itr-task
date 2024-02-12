@@ -16,6 +16,7 @@ function HomePage() {
 }
 
 function Upload({ setReload, reload }) {
+  const [rotation, setRotation] = useState(0);
   const [selectedoption, setSelectedOption] = useState(null);
   const options = [
     { value: "BOE", label: "Bill Of Entry" },
@@ -43,10 +44,10 @@ function Upload({ setReload, reload }) {
     // Example styles, you can customize them according to your needs
     control: (provided, state) => ({
       ...provided,
-      border: "1px solid orange",
+      border: "1px solid rgba(217, 57, 84, 1)",
       boxShadow: state.isFocused ? "none" : "none",
       "&:hover": {
-        border: "1px solid orange",
+        border: "1px solid rgba(217, 57, 84, 1)",
       },
     }),
     menu: (provided) => ({
@@ -56,7 +57,7 @@ function Upload({ setReload, reload }) {
     option: (provided, state) => ({
       ...provided,
       border: "1px solid #ccc", // Add a border to each option
-      color: state.isSelected ? "orange" : "black", // Change text color when selected
+      color: state.isSelected ? "rgba(217, 57, 84, 1)" : "black", // Change text color when selected
       background: state.isFocused ? "#f0f0f0" : "white", // Change background color when focused
     }),
     indicatorSeparator: () => ({}), // Remove the default indicator separator
@@ -78,6 +79,10 @@ function Upload({ setReload, reload }) {
   const pref = useRef(null);
   // const [selectedoption, setSelectedOption] = useState(null);
   const uploadicon = "Icons/uploadicon.png";
+
+  const rotateImage = () => {
+    setRotation(rotation + 360);
+  };
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -199,10 +204,13 @@ function Upload({ setReload, reload }) {
             src="Icons/refreshicon.png"
             alt="Refresh"
             style={{
+              transform: `rotate(${rotation}deg)`,
+              transition: "transform 2s ease",
               cursor: "pointer",
             }}
             onClick={() => {
               setReload(!reload);
+              rotateImage();
             }}
           />
         </div>

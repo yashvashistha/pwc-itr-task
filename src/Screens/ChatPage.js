@@ -146,7 +146,7 @@ function Section2({ pdf }) {
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    console.log(numPages);
+    // console.log(numPages);
     setNumPages(numPages);
   };
 
@@ -156,7 +156,7 @@ function Section2({ pdf }) {
       setFileName(pdf.name);
     }
     // console.log(reload);
-    console.log(pdf);
+    // console.log(pdf);
   }, [pdf]);
   return (
     <div
