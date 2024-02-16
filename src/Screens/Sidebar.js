@@ -56,7 +56,17 @@ function Sidebar() {
               }
             />
           </button>
-          <button style={{ backgroundColor: "white", cursor: "pointer" }}>
+          <button
+            style={{ backgroundColor: "white", cursor: "pointer" }}
+            onClick={() => {
+              if (pathname !== "/login") {
+                localStorage.removeItem("idToken");
+                setTimeout(() => {
+                  nav("/login");
+                }, 600);
+              }
+            }}
+          >
             <img src="Icons/logouticon.png" />
           </button>
         </div>

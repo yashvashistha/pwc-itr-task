@@ -130,6 +130,7 @@ table {
   width: 98%;
   margin-left: 1%;
   border-collapse: collapse;
+  table-layout: auto;
 }
 
 thead {
@@ -303,18 +304,35 @@ table tr td:nth-child(6) div button {
   color: white;
 }
 
+.popup-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* padding: 20px; */
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 80%;
+  width: 800px; /* Set a default width for smaller screens */
+  max-height: 80%;
+  height: 170px;
+  overflow-y: auto;
+  text-align: center;
+}
+
+@media (max-width: 970px) {
+  .popup-container {
+    max-width: 90%;
+    width: 90%;
+  }
+}
+
 @media (max-height: 510px) {
   .Section1 button {
     top: 70px;
   }
 }
-
-/* @media (max-width: 380px) {
-  .Section1 button {
-    width: 25%;
-    height: 5%;
-  }
-} */
 /* Chatpage Component CSS */
 /**/
 /**/
@@ -382,7 +400,7 @@ table tr td:nth-child(6) div button {
 /**/
 /**/
 /**/
-/* hide the text details in pdf */
+/* React-PDF Compinent CSS */
 .react-pdf__Document {
   display: flex;
   flex-direction: column;
@@ -391,11 +409,7 @@ table tr td:nth-child(6) div button {
   overflow-x: scroll;
   width: 100%;
 }
-/* .react-pdf__Page {
-  width: 90%;
-  overflow-x: scroll;
-  min-width: 90% !important;
-} */
+
 canvas.react-pdf__Page__canvas {
   display: block;
   user-select: none;
@@ -411,26 +425,72 @@ canvas.react-pdf__Page__canvas {
   display: none;
   width: 100%;
 }
-
-.popup-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* padding: 20px; */
+/* Upload Component CSS */
+/**/
+/**/
+/**/
+/**/
+/**/
+/* Login Component CSS */
+.Login {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
   background-color: white;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  max-width: 80%;
-  width: 800px; /* Set a default width for smaller screens */
-  max-height: 80%;
-  height: 170px;
-  overflow-y: auto;
-  text-align: center;
 }
-@media (max-width: 970px) {
-  .popup-container {
-    max-width: 90%;
-    width: 90%;
+
+.Login .Section-1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  /* background-color: red; */
+}
+
+.Login .Section-2 {
+  /* background-color: rgba(235, 140, 0, 1); */
+  background-color: rgba(217, 57, 84, 1);
+  width: 513px;
+  min-width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .Login div:first-child {
+  width: min(316px, 90%);
+  height: min(174px, 90%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Helvetica;
+  gap: max(5%, 10px);
+  background-color: red;
+} */
+
+@media (max-width: 655px) {
+  .Login {
+    flex-direction: column;
+  }
+  .Login .Section-1 {
+    width: 100%;
+    height: 40%;
+  }
+  .Login .Section-2 {
+    width: 100%;
+    height: 60%;
   }
 }
+/* Login Component CSS */
+/**/
+/**/
+/**/
+/**/
+/**/
