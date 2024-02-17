@@ -15,11 +15,11 @@ function EditPage() {
   const [idToken, setIdToken] = useState(localStorage.getItem("idToken") || "");
   const reuploadapi =
     "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/reupload_json";
+
   const uploadjsonhandle = async (jsoncontent) => {
     setClicked(!clicked);
-    console.log(typeof jsoncontent);
-    console.log(jsoncontent.data.data);
-    const d = { uniqueid: id, data: jsoncontent.data.data };
+    const d = { uniqueid: id, data: jsoncontent.data.data.data };
+    console.log(d);
     var config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -230,7 +230,7 @@ function Section2({ id, clicked, uploadjsonhandle, dis, idToken }) {
   };
 
   const onJsonChange = (key, value, parent, data) => {
-    jsonFile.data.data = data;
+    jsonFile.data.data.data = data;
     setNewJsonFile(jsonFile);
     setJsonFile(jsonFile);
   };
@@ -390,7 +390,7 @@ function Section2({ id, clicked, uploadjsonhandle, dis, idToken }) {
           {loading2 && jsonFile ? (
             <JSONEditor
               collapsible
-              data={jsonFile.data.data}
+              data={jsonFile.data.data.data}
               onChange={onJsonChange}
               styles={styles}
               view="dual"
