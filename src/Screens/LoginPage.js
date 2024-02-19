@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function LoginPage() {
   const nav = useNavigate();
@@ -25,7 +27,7 @@ function LoginPage() {
     ) {
       localStorage.setItem(
         "idToken",
-        "eyJraWQiOiJlNjdLV204TEJESzJQcUpBdUwwUjR2N1E0VmlCb2daaUNzWlRzZVE4NWkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5Yjg5OTdkNC1lY2FlLTQ4NjQtOGVjOC1kNWYwZDFhOTFmYTIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoLTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGgtMV84S3dOaUxnWG4iLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJjb2duaXRvOnVzZXJuYW1lIjoiOWI4OTk3ZDQtZWNhZS00ODY0LThlYzgtZDVmMGQxYTkxZmEyIiwiYXVkIjoiZzEzdjE5ZThmNDdwczZucW9lOW1sOXMwZyIsImN1c3RvbTpjdXN0b21lcklkIjoiMTIzNDU2IiwiZXZlbnRfaWQiOiIwMTI2NDViNi03YzAzLTQ4YjEtYTM4YS00NTg2NTYwZjZjMGMiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcwODE1MzcyOCwibmFtZSI6IlJha2VzaFJSTiIsInBob25lX251bWJlciI6Iis5MTk5OTg4NzA3ODQiLCJleHAiOjE3MDgxNTczMjgsImlhdCI6MTcwODE1MzcyOCwiY3VzdG9tOmVudmlyb25tZW50IjoiZGV2IiwiZW1haWwiOiJyYWtlc2gucmFtbmFuaUBtb2JpZmx5LmluIn0.OePcTvV0KhYhCy7B5ly8oa74O-Svgbd6dNxf2CTR3dXbIfGKpy3mkq4ajyxCLqrkEbGNmHiKCkt0-yWCyKTENV7BPxORL-mY-LM1u6omYOqsL5bsZUzM80xUs779MzAFezTiZdwq8lD7DrBa2LYwXlAy9_g6SpwbQrcKsldFtxqvhfYWizKWZ-CUyhqfXTCVGhbrkp3SS9lIPyypl6h6REqn8dlJV5GvxEPDeD5WLI8dotIwrSpfx8mCAKpcQgLBkIiwuQ2WvRV0K8shELlEDkho4uAMIqmG3s2dZtsSS7__hEPvxt99Kivezq-Mk62A-4fimMhibEsvl9kFwiVkSg"
+        "eyJraWQiOiJlNjdLV204TEJESzJQcUpBdUwwUjR2N1E0VmlCb2daaUNzWlRzZVE4NWkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5Yjg5OTdkNC1lY2FlLTQ4NjQtOGVjOC1kNWYwZDFhOTFmYTIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoLTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGgtMV84S3dOaUxnWG4iLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJjb2duaXRvOnVzZXJuYW1lIjoiOWI4OTk3ZDQtZWNhZS00ODY0LThlYzgtZDVmMGQxYTkxZmEyIiwiYXVkIjoiZzEzdjE5ZThmNDdwczZucW9lOW1sOXMwZyIsImN1c3RvbTpjdXN0b21lcklkIjoiMTIzNDU2IiwiZXZlbnRfaWQiOiI3NjdkOGZiNS0xYTkzLTRkZDctYWFmNC0yODgzMGRjMTExZDEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcwODM0MTU2MCwibmFtZSI6IlJha2VzaFJSTiIsInBob25lX251bWJlciI6Iis5MTk5OTg4NzA3ODQiLCJleHAiOjE3MDgzNDUxNjAsImlhdCI6MTcwODM0MTU2MCwiY3VzdG9tOmVudmlyb25tZW50IjoiZGV2IiwiZW1haWwiOiJyYWtlc2gucmFtbmFuaUBtb2JpZmx5LmluIn0.Z8UV8EXWgIS_LpI-CqjtUca-1zkbrEr_n5zrFXS-dZz9hwARxQsNuKZlCaYu58Z98XivGHtwrcwId4V_SjPvGLWA4nGh3uyVMsXt6QJ49pPS2dKo4NlSLd_AE-uSNu-usuEKqL8zLCyXo08EtDYIMUTWi1jpwKbBhoOe1_VY56x-h9FV5w_IqxOAhI_BohIw9hWLAW76tI0tK4-4z8modjWZrgNP7zJI4GRfnWeP_juKocYNoY8XkL15mA9iYnDbP0FWwdZVyvDvbmH67X46oGekFz7daHFTPGNHcT3tDTI9nuW_dRJ-boTr_3-Y-5ICWKcRmpZrpwcCRlSusgZAEw"
       );
       nav("/");
 
@@ -49,28 +51,18 @@ function LoginPage() {
       //     console.log(error);
       //   });
     } else {
-      alert("Wrong Id Password");
+      toast.warn("Wrong Id Password!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        progress: 0,
+        progressStyle: { background: "rgba(217, 57, 84, 1)" },
+        theme: "light",
+        transition: Bounce,
+      });
     }
-    // console.log(JSON.stringify(logindata));
-    // var config = {
-    //   method: "post",
-    //   maxBodyLength: Infinity,
-    //   url: signinurl,
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "x-api-key": "jUlXbxDSESrSJwI3Movt6VYIXfCAEAf1ozsltuWf",
-    //   },
-    //   data: JSON.stringify(logindata),
-    // };
-    // axios
-    //   .request(config)
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   };
+
   return (
     <div className="Login">
       <div className="Section-1">
@@ -231,6 +223,14 @@ function LoginPage() {
           </div>
         </div>
       </div>
+      {/* <ToastContainer /> */}
+      <ToastContainer
+        position="top-center"
+        autoClose="1000"
+        hideProgressBar
+        theme="dark"
+        transition={Bounce}
+      />
     </div>
   );
 }

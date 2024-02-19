@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useNavigate, useParams } from "react-router-dom";
 import { JSONEditor } from "react-json-editor-viewer";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const apilink =
   "https://muqo5wd6l2.execute-api.ap-south-1.amazonaws.com/dev/api/v1/files/";
@@ -13,13 +15,10 @@ function EditPage() {
   const [clicked, setClicked] = useState(false);
   const [dis, setDis] = useState("view");
   const [idToken, setIdToken] = useState(localStorage.getItem("idToken") || "");
-  const reuploadapi =
-    "https://pyrtqap426.execute-api.ap-south-1.amazonaws.com/navigate-pdf-parser/reupload_json";
 
   const uploadjsonhandle = async (jsoncontent) => {
     setClicked(!clicked);
     const d = { uniqueid: id, data: jsoncontent.data.data.data };
-    console.log(d);
     var config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -35,13 +34,26 @@ function EditPage() {
     axios
       .request(config)
       .then((response) => {
-        // nav("/");
-        setDis("view");
-        // alert("send");
+        toast.success("JSON Edited Successfully!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          progress: 0,
+          progressStyle: { background: "rgba(217, 57, 84, 1)" },
+          theme: "light",
+          transition: Bounce,
+        });
       })
       .catch((error) => {
-        console.log(error);
-        alert("error");
+        toast.error(error, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          progress: 0,
+          progressStyle: { background: "rgba(217, 57, 84, 1)" },
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (
@@ -101,6 +113,13 @@ function EditPage() {
           Cancel
         </button>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose="1000"
+        hideProgressBar
+        theme="dark"
+        transition={Bounce}
+      />
     </div>
   );
 }

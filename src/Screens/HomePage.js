@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Pagination from "./Pagination";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Select from "react-select";
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const apilink =
   "https://muqo5wd6l2.execute-api.ap-south-1.amazonaws.com/dev/api/v1/files/";
 
 function HomePage() {
-  const location = useLocation();
-  const { pathname } = location;
   const nav = useNavigate();
   const [reload, setReload] = useState(false);
   const [idToken, setIdToken] = useState(localStorage.getItem("idToken") || "");
@@ -122,11 +122,29 @@ function Upload({ setReload, reload, idToken }) {
 
   const uploadbtnhandle = async () => {
     if (file === null) {
-      alert("Upload a File");
+      // alert("Upload a File");
+      toast.warn("No File Selected!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        progress: 0,
+        progressStyle: { background: "rgba(217, 57, 84, 1)" },
+        theme: "light",
+        transition: Bounce,
+      });
       return;
     }
     if (file.type !== "application/pdf") {
-      alert("Only PDF Files are allowed");
+      // alert("Only PDF Files are allowed");
+      toast.warn("Only PDF Files are allowed!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        progress: 0,
+        progressStyle: { background: "rgba(217, 57, 84, 1)" },
+        theme: "light",
+        transition: Bounce,
+      });
       return;
     }
 
@@ -148,9 +166,26 @@ function Upload({ setReload, reload, idToken }) {
         setBlock("block");
         setReload(!reload);
         setSelectedOption(null);
+        toast.success("PDF Uploaded Successfully!", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          progress: 0,
+          progressStyle: { background: "rgba(217, 57, 84, 1)" },
+          theme: "light",
+          transition: Bounce,
+        });
       })
       .catch((error) => {
-        console.log(error);
+        toast.error(error, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          progress: 0,
+          progressStyle: { background: "rgba(217, 57, 84, 1)" },
+          theme: "light",
+          transition: Bounce,
+        });
       });
   };
   return (
@@ -225,6 +260,13 @@ function Upload({ setReload, reload, idToken }) {
           />
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose="1000"
+        hideProgressBar
+        theme="dark"
+        transition={Bounce}
+      />
     </div>
   );
 }
@@ -303,7 +345,7 @@ function Tablecontainer({ setReload, reload, idToken }) {
           "x-api-key": "doVk3aPq1i8Y5UPpnw3OO4a610LK2yFrahOpYEo0",
         },
       });
-      console.log(response);
+      // console.log(response);
       setRowLen(response.data.data.length);
       const sortedData = response.data.data
         .map((item) => ({
