@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { useNavigate, useParams } from "react-router-dom";
 import { JSONEditor } from "react-json-editor-viewer";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const apilink =
@@ -34,25 +34,16 @@ function EditPage() {
     axios
       .request(config)
       .then((response) => {
-        toast.success("JSON Edited Successfully!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
+        toast.success("JSON Reuploaded Successfully!", {
           progress: 0,
           progressStyle: { background: "rgba(217, 57, 84, 1)" },
-          theme: "light",
-          transition: Bounce,
         });
+        setDis("view");
       })
       .catch((error) => {
         toast.error(error, {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
           progress: 0,
           progressStyle: { background: "rgba(217, 57, 84, 1)" },
-          theme: "light",
-          transition: Bounce,
         });
       });
   };
@@ -113,13 +104,6 @@ function EditPage() {
           Cancel
         </button>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose="1000"
-        hideProgressBar
-        theme="dark"
-        transition={Bounce}
-      />
     </div>
   );
 }

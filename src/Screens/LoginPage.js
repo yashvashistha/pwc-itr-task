@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function LoginPage() {
@@ -25,9 +25,13 @@ function LoginPage() {
       // logindata.eId === "rakesh.ramnani@mobifly.in" &&
       // logindata.pswd === "Rakesh@11"
     ) {
+      toast.success("Welcome to PWC!", {
+        progress: 0,
+        progressStyle: { background: "rgba(229, 184, 185, 1)" },
+      });
       localStorage.setItem(
         "idToken",
-        "eyJraWQiOiJlNjdLV204TEJESzJQcUpBdUwwUjR2N1E0VmlCb2daaUNzWlRzZVE4NWkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5Yjg5OTdkNC1lY2FlLTQ4NjQtOGVjOC1kNWYwZDFhOTFmYTIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoLTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGgtMV84S3dOaUxnWG4iLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJjb2duaXRvOnVzZXJuYW1lIjoiOWI4OTk3ZDQtZWNhZS00ODY0LThlYzgtZDVmMGQxYTkxZmEyIiwiYXVkIjoiZzEzdjE5ZThmNDdwczZucW9lOW1sOXMwZyIsImN1c3RvbTpjdXN0b21lcklkIjoiMTIzNDU2IiwiZXZlbnRfaWQiOiI3NjdkOGZiNS0xYTkzLTRkZDctYWFmNC0yODgzMGRjMTExZDEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcwODM0MTU2MCwibmFtZSI6IlJha2VzaFJSTiIsInBob25lX251bWJlciI6Iis5MTk5OTg4NzA3ODQiLCJleHAiOjE3MDgzNDUxNjAsImlhdCI6MTcwODM0MTU2MCwiY3VzdG9tOmVudmlyb25tZW50IjoiZGV2IiwiZW1haWwiOiJyYWtlc2gucmFtbmFuaUBtb2JpZmx5LmluIn0.Z8UV8EXWgIS_LpI-CqjtUca-1zkbrEr_n5zrFXS-dZz9hwARxQsNuKZlCaYu58Z98XivGHtwrcwId4V_SjPvGLWA4nGh3uyVMsXt6QJ49pPS2dKo4NlSLd_AE-uSNu-usuEKqL8zLCyXo08EtDYIMUTWi1jpwKbBhoOe1_VY56x-h9FV5w_IqxOAhI_BohIw9hWLAW76tI0tK4-4z8modjWZrgNP7zJI4GRfnWeP_juKocYNoY8XkL15mA9iYnDbP0FWwdZVyvDvbmH67X46oGekFz7daHFTPGNHcT3tDTI9nuW_dRJ-boTr_3-Y-5ICWKcRmpZrpwcCRlSusgZAEw"
+        "eyJraWQiOiJlNjdLV204TEJESzJQcUpBdUwwUjR2N1E0VmlCb2daaUNzWlRzZVE4NWkwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5Yjg5OTdkNC1lY2FlLTQ4NjQtOGVjOC1kNWYwZDFhOTFmYTIiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiaXNzIjoiaHR0cHM6XC9cL2NvZ25pdG8taWRwLmFwLXNvdXRoLTEuYW1hem9uYXdzLmNvbVwvYXAtc291dGgtMV84S3dOaUxnWG4iLCJwaG9uZV9udW1iZXJfdmVyaWZpZWQiOmZhbHNlLCJjb2duaXRvOnVzZXJuYW1lIjoiOWI4OTk3ZDQtZWNhZS00ODY0LThlYzgtZDVmMGQxYTkxZmEyIiwiYXVkIjoiZzEzdjE5ZThmNDdwczZucW9lOW1sOXMwZyIsImN1c3RvbTpjdXN0b21lcklkIjoiMTIzNDU2IiwiZXZlbnRfaWQiOiI3ZTQxYTcxZi1jMmFjLTRiZDItOWYxMC1jMTFmZDk5ZGQ4NGEiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTcwODQwNDE3NCwibmFtZSI6IlJha2VzaFJSTiIsInBob25lX251bWJlciI6Iis5MTk5OTg4NzA3ODQiLCJleHAiOjE3MDg0MDc3NzQsImlhdCI6MTcwODQwNDE3NCwiY3VzdG9tOmVudmlyb25tZW50IjoiZGV2IiwiZW1haWwiOiJyYWtlc2gucmFtbmFuaUBtb2JpZmx5LmluIn0.gyE0up_KyKggMgrsuWt7SPPWl9f_5wVKOeVaiNHHpdH1t4rGcoF2SpU3H7qdxG8VcbFo8r998iktQex27ajR-Pre-BVSyAGH0pH0wqAnXt5LwgKnM9FLmKAc478A_P_E98mEOXFRktmtZnhj03nqF9K22-z7zXu7mBunKhdxEVuUrEq0fxyb8vKOJCo6BwZd6EDBF3jt78SE64NAVcv4RDxAasYoPeuiwYRdvOGgIsdHBPCvotdsF745_vBqni-1xFFnBULn_zZAF2fpwJOQO06nvi1hGNP5kPfoWN-ILhRLKndHJQk5BEsfy67JIu7OMUV8JJnpyFRGC5-G3p7lww"
       );
       nav("/");
 
@@ -52,13 +56,8 @@ function LoginPage() {
       //   });
     } else {
       toast.warn("Wrong Id Password!", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
         progress: 0,
-        progressStyle: { background: "rgba(217, 57, 84, 1)" },
-        theme: "light",
-        transition: Bounce,
+        progressStyle: { background: "rgba(229, 184, 185, 1)" },
       });
     }
   };
@@ -223,14 +222,6 @@ function LoginPage() {
           </div>
         </div>
       </div>
-      {/* <ToastContainer /> */}
-      <ToastContainer
-        position="top-center"
-        autoClose="1000"
-        hideProgressBar
-        theme="dark"
-        transition={Bounce}
-      />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import Pagination from "./Pagination";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const apilink =
@@ -122,28 +122,16 @@ function Upload({ setReload, reload, idToken }) {
 
   const uploadbtnhandle = async () => {
     if (file === null) {
-      // alert("Upload a File");
-      toast.warn("No File Selected!", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
+      toast.warn("Upload a File!", {
         progress: 0,
         progressStyle: { background: "rgba(217, 57, 84, 1)" },
-        theme: "light",
-        transition: Bounce,
       });
       return;
     }
     if (file.type !== "application/pdf") {
-      // alert("Only PDF Files are allowed");
       toast.warn("Only PDF Files are allowed!", {
-        position: "top-center",
-        autoClose: 1000,
-        hideProgressBar: false,
         progress: 0,
         progressStyle: { background: "rgba(217, 57, 84, 1)" },
-        theme: "light",
-        transition: Bounce,
       });
       return;
     }
@@ -167,24 +155,14 @@ function Upload({ setReload, reload, idToken }) {
         setReload(!reload);
         setSelectedOption(null);
         toast.success("PDF Uploaded Successfully!", {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
           progress: 0,
           progressStyle: { background: "rgba(217, 57, 84, 1)" },
-          theme: "light",
-          transition: Bounce,
         });
       })
       .catch((error) => {
         toast.error(error, {
-          position: "top-center",
-          autoClose: 1000,
-          hideProgressBar: false,
           progress: 0,
           progressStyle: { background: "rgba(217, 57, 84, 1)" },
-          theme: "light",
-          transition: Bounce,
         });
       });
   };
@@ -260,13 +238,6 @@ function Upload({ setReload, reload, idToken }) {
           />
         </div>
       </div>
-      <ToastContainer
-        position="top-center"
-        autoClose="1000"
-        hideProgressBar
-        theme="dark"
-        transition={Bounce}
-      />
     </div>
   );
 }

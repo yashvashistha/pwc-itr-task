@@ -7,6 +7,7 @@ import "./App.css";
 import Sidebar from "./Screens/Sidebar";
 import EditPage from "./Screens/EditPage";
 import LoginPage from "./Screens/LoginPage";
+import { Bounce, ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -23,6 +24,11 @@ function App() {
           </Routes>
         </div>
       </BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose="1000"
+        transition={Bounce}
+      />
     </div>
   );
 }
