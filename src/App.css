@@ -370,17 +370,19 @@ table tr td:nth-child(6) div button {
 
 .Upload-select {
   overflow: visible;
+  /* order: 1; */
 }
 
 .DragDrop {
   display: flex;
   flex-direction: row;
-  width: 40%;
+  width: max(40%, 100px);
   height: 70%;
   border: 1px dashed rgba(217, 57, 84, 1);
   text-align: center;
   justify-content: center;
   align-items: center;
+  /* order: 2; */
 }
 
 .Upload-btn {
@@ -393,6 +395,22 @@ table tr td:nth-child(6) div button {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  /* order: 3; */
+}
+
+@media (max-width: 630px) {
+  /* .Upload-display {
+    display: none;
+  } */
+  /* .DragDrop {
+    order: 1;
+  }
+  .Upload-select {
+    order: 2;
+  }
+  .Upload-btn {
+    order: 2;
+  } */
 }
 /* Upload Component CSS */
 /**/
@@ -400,7 +418,7 @@ table tr td:nth-child(6) div button {
 /**/
 /**/
 /**/
-/* React-PDF Compinent CSS */
+/* React-PDF Component CSS */
 .react-pdf__Document {
   display: flex;
   flex-direction: column;
@@ -425,7 +443,7 @@ canvas.react-pdf__Page__canvas {
   display: none;
   width: 100%;
 }
-/* Upload Component CSS */
+/* React-PDF Component CSS */
 /**/
 /**/
 /**/

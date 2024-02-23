@@ -169,7 +169,7 @@ function Upload({ setReload, reload, idToken }) {
   return (
     <div className="Upload-Maindiv">
       <p>Upload File</p>
-      <div className="Upload-Subdiv" style={{ width: "100%" }}>
+      <div className="Upload-Subdiv Upload-display" style={{ width: "100%" }}>
         <Select
           className="Upload-select"
           options={options}
@@ -221,6 +221,7 @@ function Upload({ setReload, reload, idToken }) {
             width: "15%",
             display: "flex",
             justifyContent: "flex-end",
+            // order: "4",
           }}
         >
           <img
