@@ -90,6 +90,8 @@ function Upload({ setReload, reload, idToken }) {
   const [block, setBlock] = useState("block");
   const pref = useRef(null);
   const uploadicon = "Icons/uploadicon.png";
+  const [warnmsg1, setWarnMsg1] = useState(false);
+  const [warnmsg2, setWarnMsg2] = useState(false);
 
   const rotateImage = () => {
     setRotation(rotation + 360);
@@ -111,18 +113,33 @@ function Upload({ setReload, reload, idToken }) {
   const hiddenuploadhandler = (e) => {
     e.preventDefault();
     const selectedFile = e.target.files[0];
+    fileinputref.current.value = "";
     uploadhandler(selectedFile);
   };
   const uploadhandler = (file) => {
-    console.log(file);
     pref.current.innerText = file.name;
     setBlock("none");
     setFile(file);
   };
+  const clearfilehandler = () => {
+    pref.current.innerText = "";
+    setBlock("block");
+    setFile(null);
+    setWarnMsg2(false);
+  };
 
   const uploadbtnhandle = async () => {
     if (file === null) {
-      toast.warn("Upload a File!", {
+      setWarnMsg2(true);
+      toast.warn("Please upload one file!", {
+        progress: 0,
+        progressStyle: { background: "rgba(217, 57, 84, 1)" },
+      });
+      return;
+    }
+    if (selectedoption === null) {
+      setWarnMsg1(true);
+      toast.warn("Please select one file type!", {
         progress: 0,
         progressStyle: { background: "rgba(217, 57, 84, 1)" },
       });
@@ -154,6 +171,9 @@ function Upload({ setReload, reload, idToken }) {
         setBlock("block");
         setReload(!reload);
         setSelectedOption(null);
+        setWarnMsg1(false);
+        setWarnMsg2(false);
+        setFile(null);
         toast.success("PDF Uploaded Successfully!", {
           progress: 0,
           progressStyle: { background: "rgba(217, 57, 84, 1)" },
@@ -169,24 +189,92 @@ function Upload({ setReload, reload, idToken }) {
   return (
     <div className="Upload-Maindiv">
       <p>Upload File</p>
-      <div className="Upload-Subdiv Upload-display" style={{ width: "100%" }}>
-        <Select
-          className="Upload-select"
-          options={options}
-          value={selectedoption}
-          onChange={handleChange}
-          placeholder={
-            selectedoption == null ? "Select Method" : selectedoption.label
-          }
-          styles={customStyles}
-        />
+      <div className="Upload-Subdiv">
+        <div style={{ overflow: "visible", position: "relative" }}>
+          <Select
+            className="Upload-select"
+            options={options}
+            value={selectedoption}
+            onChange={handleChange}
+            placeholder={
+              selectedoption == null ? "Select File Type" : selectedoption.label
+            }
+            styles={customStyles}
+          />
+          {warnmsg1 && (!warnmsg1 || selectedoption == null) ? (
+            <div
+              className="pointed-border"
+              style={{
+                fontSize: "110%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                minHeight: "max-content",
+                height: "100%",
+              }}
+            >
+              <p style={{ width: "80%", textWrap: "wrap", height: "100%" }}>
+                Please select one file type!
+              </p>
+              <button
+                style={{
+                  borderStyle: "none",
+                  backgroundColor: "transparent",
+                  position: "absolute",
+                  right: "10px",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setWarnMsg1(!warnmsg1);
+                }}
+              >
+                X
+              </button>
+            </div>
+          ) : (
+            // <div className="pointed-border" style={{ fontSize: "110%" }}>
+            //   Please select one file type!
+            // </div>
+            <></>
+          )}
+        </div>
         <div
           className="DragDrop"
           onDragEnter={handleDragEnter}
           onDragOver={handleDragOver}
           onDrop={handleDrop}
+          style={{ overflow: "visible", position: "relative" }}
         >
-          <p ref={pref}></p>
+          {/* <p ref={pref}></p> */}
+          <p
+            style={{
+              display: block == "block" ? "none" : "flex",
+              width: "100%",
+              justifyContent: "center",
+            }}
+          >
+            <p ref={pref}></p>
+            <button
+              title="Clear the Upload File"
+              style={{
+                display: block == "block" ? "none" : "block",
+                borderStyle: "none",
+                backgroundColor: "white",
+                color: "black",
+                fontSize: "15px",
+                fontWeight: "500",
+                cursor: "pointer",
+                position: "absolute",
+                right: "5px",
+                top: "5px",
+              }}
+              onClick={clearfilehandler}
+            >
+              X
+            </button>
+          </p>
           <p style={{ width: "100%", display: block }}>
             <img
               src={uploadicon}
@@ -203,6 +291,43 @@ function Upload({ setReload, reload, idToken }) {
               Browse File
             </span>
           </p>
+          {warnmsg2 && (!warnmsg2 || file == null) ? (
+            <div
+              className="pointed-border"
+              style={{
+                fontSize: "110%",
+                display: "flex",
+                justifyContent: "space-between",
+                minHeight: "max-content",
+                height: "50%",
+              }}
+            >
+              <p style={{ width: "80%", textWrap: "wrap" }}>
+                Please upload one file!
+              </p>
+              <button
+                style={{
+                  borderStyle: "none",
+                  backgroundColor: "transparent",
+                  position: "absolute",
+                  right: "10px",
+                  fontSize: "15px",
+                  fontWeight: "500",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setWarnMsg2(!warnmsg2);
+                }}
+              >
+                X
+              </button>
+            </div>
+          ) : (
+            // <div className="pointed-border" style={{ fontSize: "110%" }}>
+            //   Please upload one file!
+            // </div>
+            <></>
+          )}
         </div>
         {/* Hidden file input from here */}
         <input
@@ -245,10 +370,10 @@ function Upload({ setReload, reload, idToken }) {
 
 function Tablecontainer({ setReload, reload, idToken }) {
   const nav = useNavigate();
-  const deleteicon = "Icons/deleteicon.png";
-  const pdficon = "Icons/pdficon.png";
-  const jsonicon = "Icons/jsonicon.png";
-  const editicon = "Icons/editicon.png";
+  const deleteicon = "/Icons/deleteicon.png";
+  const pdficon = "/Icons/pdficon.png";
+  const jsonicon = "/Icons/jsonicon.png";
+  const editicon = "/Icons/editicon.png";
   const [tableinfo, setTableInfo] = useState(null);
   const [rowperpage] = useState(20);
   const [rowlen, setRowLen] = useState(1);
@@ -317,7 +442,6 @@ function Tablecontainer({ setReload, reload, idToken }) {
           "x-api-key": "doVk3aPq1i8Y5UPpnw3OO4a610LK2yFrahOpYEo0",
         },
       });
-      // console.log(response);
       setRowLen(response.data.data.length);
       const sortedData = response.data.data
         .map((item) => ({
@@ -334,7 +458,6 @@ function Tablecontainer({ setReload, reload, idToken }) {
   const indexoflastrow = currentpage * rowperpage;
   const indexoffirstrow = indexoflastrow - rowperpage;
   const paginate = (pageNumber) => {
-    console.log(indexoffirstrow, indexoflastrow);
     setCurrentPage(pageNumber);
   };
 
@@ -359,74 +482,76 @@ function Tablecontainer({ setReload, reload, idToken }) {
           </thead>
           <tbody>
             {loading && tableinfo ? (
-              tableinfo.slice(indexoffirstrow, indexoflastrow).map((d) => (
-                <tr>
-                  <td>{d.UniqueId || "ID"}</td>
-                  <td>{d.File_name || "NULL"}</td>
-                  <td>{d.File_type || "--"}</td>
-                  <td>{d.Status || "Status"}</td>
-                  <td>
-                    {(
+              tableinfo
+                .slice(indexoffirstrow, indexoflastrow)
+                .map((d, index) => (
+                  <tr key={index}>
+                    <td>{d.UniqueId || "ID"}</td>
+                    <td>{d.File_name || "NULL"}</td>
+                    <td>{d.File_type || "--"}</td>
+                    <td>{d.Status || "Status"}</td>
+                    <td>
+                      {(
+                        <div>
+                          <p>{d.Curr_date_time.toString().slice(0, 15)}</p>
+                          <p>
+                            {d.Curr_date_time.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              second: "2-digit",
+                            })}
+                          </p>
+                        </div>
+                      ) || "NULL"}
+                    </td>
+                    <td>
                       <div>
-                        <p>{d.Curr_date_time.toString().slice(0, 15)}</p>
-                        <p>
-                          {d.Curr_date_time.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            second: "2-digit",
-                          })}
-                        </p>
+                        <button
+                          title="Edit"
+                          style={{
+                            backgroundImage: `url(${editicon})`,
+                          }}
+                          onClick={() => {
+                            nav(`/edit/${d.UniqueId}`);
+                          }}
+                        ></button>
+                        <button
+                          title="Delete"
+                          style={{
+                            backgroundImage: `url(${deleteicon})`,
+                          }}
+                          onClick={() => {
+                            deletehandler(d.UniqueId);
+                          }}
+                        ></button>
+                        <button
+                          title="Download PDF"
+                          style={{
+                            backgroundImage: `url(${pdficon})`,
+                          }}
+                          onClick={() => {
+                            downloadhandler({
+                              id: d.UniqueId,
+                              type: "pdf",
+                            });
+                          }}
+                        ></button>
+                        <button
+                          title="Download JSON"
+                          style={{
+                            backgroundImage: `url(${jsonicon})`,
+                          }}
+                          onClick={() => {
+                            downloadhandler({
+                              id: d.UniqueId,
+                              type: "json",
+                            });
+                          }}
+                        ></button>
                       </div>
-                    ) || "NULL"}
-                  </td>
-                  <td>
-                    <div>
-                      <button
-                        title="Edit"
-                        style={{
-                          backgroundImage: `url(${editicon})`,
-                        }}
-                        onClick={() => {
-                          nav(`/edit/${d.UniqueId}`);
-                        }}
-                      ></button>
-                      <button
-                        title="Delete"
-                        style={{
-                          backgroundImage: `url(${deleteicon})`,
-                        }}
-                        onClick={() => {
-                          deletehandler(d.UniqueId);
-                        }}
-                      ></button>
-                      <button
-                        title="Download PDF"
-                        style={{
-                          backgroundImage: `url(${pdficon})`,
-                        }}
-                        onClick={() => {
-                          downloadhandler({
-                            id: d.UniqueId,
-                            type: "pdf",
-                          });
-                        }}
-                      ></button>
-                      <button
-                        title="Download JSON"
-                        style={{
-                          backgroundImage: `url(${jsonicon})`,
-                        }}
-                        onClick={() => {
-                          downloadhandler({
-                            id: d.UniqueId,
-                            type: "json",
-                          });
-                        }}
-                      ></button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+                    </td>
+                  </tr>
+                ))
             ) : (
               <p>Loading...</p>
             )}
@@ -437,9 +562,10 @@ function Tablecontainer({ setReload, reload, idToken }) {
         postsPerPage={rowperpage}
         totalPosts={rowlen}
         currentpage={currentpage}
-        indexoffirstrow={indexoffirstrow}
-        indexoflastrow={indexoflastrow}
         paginate={paginate}
+        text={`Showing ${indexoffirstrow + 1} to ${" "}
+        ${indexoflastrow > rowlen ? rowlen : indexoflastrow} of total ${" "}
+        ${rowlen} entries`}
       />
     </div>
   );

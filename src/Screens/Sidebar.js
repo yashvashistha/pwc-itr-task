@@ -12,10 +12,11 @@ function Sidebar() {
       <p>V1.0</p>
       <div className="ComponentBtn">
         <img
-          src="Icons/sidebtn.png"
+          src="/Icons/sidebtn.png"
           alt="Side Button"
           width="24px"
           height="24px"
+          // style={{ position: "fixed", left: "2px" }}
         />
         <div>
           <button
@@ -32,7 +33,7 @@ function Sidebar() {
           >
             <img
               src={
-                btnhook ? "Icons/commenticon2.png" : "Icons/commenticon1.png"
+                btnhook ? "/Icons/commenticon2.png" : "/Icons/commenticon1.png"
               }
             />
           </button>
@@ -51,8 +52,8 @@ function Sidebar() {
             <img
               src={
                 btnhook
-                  ? "Icons/sideuploadicon2.png"
-                  : "Icons/sideuploadicon1.png"
+                  ? "/Icons/sideuploadicon2.png"
+                  : "/Icons/sideuploadicon1.png"
               }
             />
           </button>
@@ -67,7 +68,7 @@ function Sidebar() {
               }
             }}
           >
-            <img src="Icons/logouticon.png" />
+            <img src="/Icons/logouticon.png" />
           </button>
         </div>
       </div>

@@ -370,7 +370,6 @@ table tr td:nth-child(6) div button {
 
 .Upload-select {
   overflow: visible;
-  /* order: 1; */
 }
 
 .DragDrop {
@@ -382,7 +381,6 @@ table tr td:nth-child(6) div button {
   text-align: center;
   justify-content: center;
   align-items: center;
-  /* order: 2; */
 }
 
 .Upload-btn {
@@ -395,22 +393,6 @@ table tr td:nth-child(6) div button {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  /* order: 3; */
-}
-
-@media (max-width: 630px) {
-  /* .Upload-display {
-    display: none;
-  } */
-  /* .DragDrop {
-    order: 1;
-  }
-  .Upload-select {
-    order: 2;
-  }
-  .Upload-btn {
-    order: 2;
-  } */
 }
 /* Upload Component CSS */
 /**/
@@ -468,11 +450,9 @@ canvas.react-pdf__Page__canvas {
   justify-content: center;
   align-items: center;
   width: 60%;
-  /* background-color: red; */
 }
 
 .Login .Section-2 {
-  /* background-color: rgba(235, 140, 0, 1); */
   background-color: rgba(217, 57, 84, 1);
   width: 513px;
   min-width: 30%;
@@ -500,3 +480,86 @@ canvas.react-pdf__Page__canvas {
 /**/
 /**/
 /**/
+.FullScreen {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgb(255, 255, 255);
+}
+
+.Center-div {
+  width: 600px;
+  height: 40%;
+  background-color: white;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.FullScreen .Center-div .tempinput {
+  background-color: whitesmoke;
+}
+
+.FullScreen .Center-div .tempinput:focus {
+  background-color: rgba(217, 57, 84, 1);
+  box-sizing: content-box;
+  border: 1px solid rgba(217, 57, 84, 1);
+}
+
+@media (max-width: 650px) {
+  .Center-div {
+    width: 80%;
+  }
+}
+
+/* .FullScreen .Center-div .tempinput:focus {
+  border: 1px solid rgba(217, 57, 84, 1) !important;
+} */
+
+@keyframes bounce {
+  0% {
+    transform: translateY(-180%);
+  }
+  40%,
+  60% {
+    transform: translateY(-50%);
+  }
+  50% {
+    transform: translateY(-20%);
+  }
+  100% {
+    transform: translateY(10%);
+  }
+}
+
+.pointed-border {
+  position: absolute;
+  background-color: white;
+  border: 1px solid rgb(210, 0, 0);
+  color: rgb(214, 0, 0);
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 18px;
+  width: 100%;
+  height: 30px;
+  min-height: fit-content;
+  min-width: fit-content;
+  top: 110%;
+  text-align: center;
+  border-radius: 5px;
+  animation: bounce 0.25s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(249, 198, 198);
+}
+
+/* .Toastify__toast-container {
+  width: 100%;
+} */
+
+/* --toastify-toast-width: 320px; */

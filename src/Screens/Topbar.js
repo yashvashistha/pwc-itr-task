@@ -5,7 +5,7 @@ function Topbar() {
     <div className="Topbar">
       <div>
         <img
-          src="Icons/pwcicon.png"
+          src="/Icons/pwcicon.png"
           alt="Mobifly Icon"
           height="25px"
           width="33px"
@@ -15,7 +15,7 @@ function Topbar() {
 
       <div>
         <img
-          src="Icons/adminicon.png"
+          src="/Icons/adminicon.png"
           alt="admin"
           height="18px"
           width="18px"
@@ -25,7 +25,5 @@ function Topbar() {
     </div>
   );
 }
-
-
 
 export default Topbar;

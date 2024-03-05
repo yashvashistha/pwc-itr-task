@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Pagination from "./Pagination";
 
 function ChatPage() {
   const fileinputref = useRef(null);
@@ -11,6 +12,16 @@ function ChatPage() {
   const [pblock, setPBlock] = useState(false);
   const pref = useRef(null);
   const uploadicon = "Icons/uploadicon.png";
+
+  const [rowperpage] = useState(1);
+  const [rowlen, setRowLen] = useState(1);
+  const [currentpage, setCurrentPage] = useState(1);
+
+  const indexoflastrow = currentpage * rowperpage;
+  const indexoffirstrow = indexoflastrow - rowperpage;
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const handleDragEnter = (e) => {
     e.preventDefault();
@@ -82,7 +93,8 @@ function ChatPage() {
               width: "100%",
               backgroundColor: "rgba(217, 57, 84, 1)",
               display: "flex",
-              justifyContent: "flex-start",
+              // justifyContent: "flex-start",
+              justifyContent: "space-between",
               alignItems: "center",
             }}
           >
@@ -97,6 +109,25 @@ function ChatPage() {
             >
               Chat PDF
             </p>
+            <button
+              style={{
+                borderStyle: "none",
+                backgroundColor: "transparent",
+                position: "relative",
+                right: "10px",
+                top: "0px",
+                color: "white",
+                fontSize: "15px",
+                fontWeight: "500",
+                cursor: "pointer",
+                width: "20px",
+              }}
+              onClick={() => {
+                setBlock(!block);
+              }}
+            >
+              X
+            </button>
           </div>
           <div
             style={{
@@ -146,12 +177,32 @@ function ChatPage() {
         />
         {/* Hidden file input to here  */}
       </div>
-      <Section2 pdf={file} />
+      <Section2
+        pdf={file}
+        setRowLen={setRowLen}
+        indexoffirstrow={indexoffirstrow}
+        indexoflastrow={indexoflastrow}
+      />
+      <Pagination
+        postsPerPage={rowperpage}
+        totalPosts={rowlen}
+        currentpage={currentpage}
+        paginate={paginate}
+        cssstyle={{
+          height: "7%",
+          width: "43.5%",
+          position: "relative",
+          justifyContent: "space-between",
+          alignSelf: "flex-start",
+          left: "6.5%",
+        }}
+        text={`Page ${indexoffirstrow + 1} / ${rowlen}`}
+      />
     </div>
   );
 }
 
-function Section2({ pdf }) {
+function Section2({ pdf, setRowLen, indexoffirstrow, indexoflastrow }) {
   const [pdfFile, setPdfFile] = useState(null);
   const [filename, setFileName] = useState(null);
   const [numPages, setNumPages] = useState();
@@ -159,8 +210,8 @@ function Section2({ pdf }) {
   pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
   const onDocumentLoadSuccess = ({ numPages }) => {
-    // console.log(numPages);
     setNumPages(numPages);
+    setRowLen(numPages);
   };
 
   useEffect(() => {
@@ -168,9 +219,8 @@ function Section2({ pdf }) {
       setPdfFile(pdf);
       setFileName(pdf.name);
     }
-    // console.log(reload);
-    // console.log(pdf);
   }, [pdf]);
+
   return (
     <div
       style={{
@@ -199,6 +249,7 @@ function Section2({ pdf }) {
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
+            height: "5%",
           }}
         >
           <p
@@ -227,6 +278,7 @@ function Section2({ pdf }) {
               style={{
                 backgroundColor: "transparent",
                 borderStyle: "none",
+                cursor: "pointer",
               }}
               onClick={() => {
                 setPdfWidth(pdfwidth + 30);
@@ -238,6 +290,7 @@ function Section2({ pdf }) {
               style={{
                 backgroundColor: "transparent",
                 borderStyle: "none",
+                cursor: "pointer",
               }}
               onClick={() => {
                 setPdfWidth(pdfwidth - 30);
@@ -259,9 +312,15 @@ function Section2({ pdf }) {
         >
           {pdfFile && (
             <Document file={pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
-              {Array.from({ length: numPages }, (_, index) => (
-                <Page key={index + 1} pageNumber={index + 1} width={pdfwidth} />
-              ))}
+              {Array.from({ length: numPages })
+                .slice(indexoffirstrow, indexoflastrow)
+                .map((_, index) => (
+                  <Page
+                    key={index + indexoffirstrow + 1}
+                    pageNumber={index + indexoffirstrow + 1}
+                    width={pdfwidth}
+                  />
+                ))}
             </Document>
           )}
         </div>
